@@ -3,9 +3,47 @@
 <html>
   <head>
     <title>/dev/random</title>
+    <style>
+      html {
+          background-color: #000;
+          color: #fff;
+      }
+      html, body{
+          height: 90%;
+      }
+      a {
+          color: #fff;
+      }
+      #wrapper{
+          min-height: 100%;
+          height: auto !important;
+          height: 100%;
+          margin: 0 auto 0px; /* the bottom margin is the negative value of the footer's height */
+      }
+      #footer, .push {
+          text-align: center;
+          height: 0px;
+          text-align: center;
+          clear:both;
+          font-family: monospace;
+      }
+      #rand-container {
+          width:auto;
+          text-align: center;
+      }
+    </style>
   </head>
   <body>
-    <pre id='random'></pre>
+    <div id="wrapper">
+      <div id="rand-container">
+        <pre id='random'></pre>
+      </div>
+      <div class="push"></div>
+    </div>
+    <div id="footer">
+      Checkout some projects: <a href="http://devrandom.ro/twit/">Twit</a><br />
+      Or checkout out my code on <a href="https://github.com/rciorba/">Github</a> or <a href="https://bitbucket.com/raduciorba/">Bitbucket</a>.
+    </div>
     <script>
         "use strict";
         var element = document.getElementById("random");
