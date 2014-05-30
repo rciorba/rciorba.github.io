@@ -41,16 +41,17 @@
       <div class="push"></div>
     </div>
     <div id="footer">
-      Checkout some projects: <a href="http://devrandom.ro/twit/">Twit</a><br />
-      Or checkout out my code on <a href="https://github.com/rciorba/">Github</a> or <a href="https://bitbucket.com/raduciorba/">Bitbucket</a>.
+      This is Radu Ciorba's corner of the internet.<br /><br />
+      Checkout out my code on <a href="https://github.com/rciorba/">Github</a> or <a href="https://bitbucket.com/raduciorba/">Bitbucket</a>.
     </div>
     <script>
         "use strict";
         var element = document.getElementById("random");
-        var characters = "0123456789abcdef"
+        var characters = "0123456789abcdef";
+        element.innerHTML = "";
         for (var count = 0; count < 32; count++) {
             var index = Math.floor(15.9999 * Math.random());
-            element.innerText = element.innerText + characters[index];
+            element.innerHTML = element.innerHTML + characters[index];
         }
     </script>
   </body>
