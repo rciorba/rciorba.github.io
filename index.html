@@ -6,10 +6,18 @@
     <style>
       html {
           background-color: #333;
+          background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkAgMAAAANjH3HAAAACVBMVEUaGhohISElJSUh9lebAAAB20lEQVRIx4XWuZXDMAwE0C0SAQtggIIYoAAEU+aKOHhYojTrYP2+QfOW/5QIJOih/q8HwF/pb3EX+UPIveYcQGgEHiu9hI+ihEc5Jz5KBIlRRRaJ1JtoSAl5Hw96hLB1/up1tnIXOck5jZQy+3iU2hAOKSH1JvwxHsp+5TLF5MOl1/MQXsVs1miXc+KDbYydyMeUgpPQreZ7fWidbNhkXNJSeAhc6qHmHD8AYovunYyEACWEbyIhNeB9fRrH3hFi0bGPLuEW7xCNaohw1vAlS805nfsrTspclB/hVdoqusg53eH7FWot+wjYpOViX8KbFFKTwlnzvj65P9H/vD0/hibYBGhPwlPO8TmxRsaxsNnrUmUXpNhirlJMPr6Hqq9k5Xn/8iYQHYIuQsWFC6Z87IOxLxHphSY4SpuiU87xJnJr5axfeRd+lnMExXpEWPpuZ1v7qZdNBOjiHzDREHX5fs5Zz9p6X0vVKbKKchlSl5rv+3p//FJ/PYvoKryI8vs+2G9lzRmnEKkh+BU8yDk515jDj/HAswu7CCz6U/Mxb/PnC9N41ndpU4hUU7JGk/C9PmP/M2xZYdvBW2PObyf1IUiIzoHmHW9yTncliYs9A9tVNppdShfgQaTLMf+j3X723tLeHgAAAABJRU5ErkJggg==);
           color: #fff;
+          font-size: 1.4em;
+          margin: 0px;
+          padding: 0px;
+          border: 0px;
       }
       html, body{
-          height: 90%;
+          height: 100%;
+          margin: 0px;
+          padding: 0px;
+          border: 0px;
       }
       a {
           color: #fff;
@@ -18,19 +26,26 @@
           min-height: 100%;
           height: auto !important;
           height: 100%;
-          margin: 0 auto 0px; /* the bottom margin is the negative value of the footer's height */
+          padding: 0px;
+          margin: 0 0 -120px 0; /* the bottom margin is the negative value of the footer's height */
       }
       #footer, .push {
+          margin: 0px;
           text-align: center;
-          height: 0px;
+          height: 120px;
           text-align: center;
           clear:both;
           font-family: monospace;
       }
-      #rand-container {
+      #rand-container, #random {
           width:auto;
           text-align: center;
+          margin: 0px;
       }
+     .attribution {
+         font-size: 0.7em;
+         color: #ccc;
+     }
     </style>
   </head>
   <body>
@@ -44,6 +59,9 @@
       This is Radu Ciorba's corner of the internet.<br /><br />
       Checkout out my code on <a href="https://github.com/rciorba/">Github</a> or <a href="https://bitbucket.com/raduciorba/">Bitbucket</a>.<br />
       Or checkout slides from some of my <a href="talks/">talks</a>.
+      <p class="attribution">
+        Backgroud pattern shamelessly copied from <a href="https://github.com/StylishThemes/GitHub-Dark">Github Dark User Style (CC-A-SA).
+      </p>
     </div>
     <script>
         "use strict";
