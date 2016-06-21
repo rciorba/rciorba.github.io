@@ -1,0 +1,153 @@
+\documentclass{beamer}
+
+\mode<presentation> {
+  \usetheme{Madrid}
+}
+
+\title[Docker]{Docker Intro} % The short title appears at the bottom of every slide, the full title is only on the title page
+
+\author{Radu Ciorba} % Your name
+\institute[Spyhce] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
+{
+  Spyhce \\ % Your institution for the title page
+  \medskip
+  \textit{radu.ciorba@spyhce.com} % Your email address
+}
+\date{\today} % Date, can be changed to a custom date
+
+\begin{document}
+
+\begin{frame}
+  \titlepage % Print the title page as the first slide
+\end{frame}
+
+\begin{frame}
+  \frametitle{Context}
+  \begin{itemize}
+  \item started playing arround with docker in 2013
+  \item 2014 for dev stuff + to deploy a ruby app at HackTM
+  \item 2015 using it in automated tests + wrote a trivial init system
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{What is Docker?}
+  \begin{itemize}
+  \item Container runtime.
+  \item A toolchain to package applications and distribute them.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{What's a container}
+  \begin{itemize}
+  \item Looks like a lightweight VM (if you squint hard enought)
+  \item Containers: Kernel level isolation (PID, users, networking, ...)
+  \item FreeBSD Jails 2000, Solaris Zones 2004, LXC 2008
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Why a new tool when we have LXC?}
+  \begin{center}
+  LXC wants to solve the problem of lightweight VMs. \par
+  \noindent
+  Docker wants to solve the problem of application packaging and deployment.
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The docker way}
+  \begin{itemize}
+  \item Don't treat it like a VM but an Application Container.
+  \item Only run one ``App'' per container.
+  \item Have that app log to stdout, so Docker can collect the logs.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Live Demo}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Persisting Data}
+  \begin{itemize}
+  \item Containers are ephemeral.
+  \item You can have 'VOLUMES' for a container.
+  \item Use a dedicated DATA container and the --volumes-from flag
+  \item Or just bind mount a volume - very useful in development
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Networking}
+  \begin{itemize}
+  \item By default docker creates a docker0 bridge and you can map ports
+  \item You can use another container's network
+  \item You can use the host's network
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{What's nice about Docker}
+  \begin{itemize}
+  \item Building versioned images and sharing them!
+  \item Imagine you build a version, deploy it to QA, test it there, take that exact environment (code, os, libraries) and put it in PROD.
+  \item Imagine you could ensure your dev environment is EXACTLY the same as prod?
+  \item Once an image is built, you don't care what's in there, you just run it.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{When developing}
+  \begin{itemize}
+  \item Bind mount your code in to an environment
+  \item Edit locally in your env of choice
+  \item Run the app/tests in your target env
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{For CI}
+  \begin{itemize}
+  \item Run each test in it's own environment
+  \item No more ``My selenium tests require FFox X.Y but the build slaves have X.Z''
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{In your tests}
+  \begin{itemize}
+  \item Docker has simple rest api
+  \item SetUp/TearDown containers as fixtures
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Docker vs Ansible/Chef/Salt/Puppet}
+  \begin{itemize}
+  \item Docker is focused on app packaging and distribution.
+  \item Use Ansible to prepare the nodes, pull and start your containers.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Or the big boys}
+  \begin{itemize}
+  \item Kubernetes
+  \item CoreOS
+  \item Docker Swarm
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Security}
+  \begin{itemize}
+  \item Isolation is not perfect!
+  \item Don't just run everything as root!
+  \item Privileged containers... the name says it all.
+  \item Running untrusted images published on the docker hub is like downloading shareware in the 90s.
+  \end{itemize}
+\end{frame}
+
+\end{document}
