@@ -1,0 +1,150 @@
+\documentclass{beamer}
+\usepackage{listings}
+\usepackage{minted}
+\usepackage{anyfontsize}
+\usepackage[utf8]{inputenc}
+
+\mode<presentation> {
+  \usetheme{Madrid}
+}
+
+\title[Selenium Page Object Model]{Page Object Model} % The short title appears at the bottom of every slide, the full title is only on the title page
+
+\author{Radu Ciorba \href{mailto:radu@presslabs.com}{\{radu@presslabs.com\}}} % Your name
+\date{\today} % Date, can be changed to a custom date
+
+\begin{document}
+
+\begin{frame}
+  \titlepage % Print the title page as the first slide
+\end{frame}
+
+\begin{frame}
+  \frametitle{Content of this presentation}
+  \begin{itemize}
+  \item Introducing the Page Object Model pattern
+  \item Selenium Tips and Tricks
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Problems: Flaky Tests}
+  \begin{itemize}
+  \item Flaky Tests
+  \item Mostly caused by timing issues
+  \item sleep won't fix this
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Flakyness}
+  \inputminted[fontsize=\footnotesize]{python}{snippets/waits.py}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Problems: Readability}
+   {\fontsize{8.5pt}{8.5pt}
+     \inputminted{python}{snippets/before.py}
+   }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Problems: Readability}
+   {\fontsize{8.5pt}{8.5pt}
+     \inputminted{python}{snippets/after.py}
+   }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Problems: Readability}
+  \begin{itemize}
+  \item For the test code \textbf{Intent} should be obvious
+  \item Don't lose \textbf{the what} in a forest of \textbf{how}
+  \item Add another layer of abstraction, to separate the details of the DOM from the test code
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{A Simple Page Object}
+  \inputminted[fontsize=\footnotesize]{python}{snippets/pom1.py}
+\end{frame}
+
+\begin{frame}
+  \frametitle{A Page Object with Nested Elements}
+  \inputminted[fontsize=\footnotesize]{python}{snippets/pom2.py}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Separation of concernes}
+  What belongs in the POM library
+  \begin{itemize}
+  \item Generic code, that's probably gonna be the same to interact with any page, element
+  \item click, hover, input text, read text, etc.
+  \end{itemize}
+  \vspace{10pt}
+  What belongs in the Pages
+  \begin{itemize}
+  \item What elements are on this page
+  \item getters for reading certain attributes (coment author's email, etc)
+  \end{itemize}
+  \vspace{10pt}
+  What belongs in the Tests
+  \begin{itemize}
+  \item What actions are being performed (if the DOM structure is visible here, you have an abstraction leak)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Tips and tricks}
+  \begin{itemize}
+  \item Try to keep tests independent (not always trivial, especially since we're black box testing someone else's code)
+  \item If there are dependencies, try to snapshot the DB after reaching a good state, then revert there (see the must-use plugin in the rctest instance)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Tips and tricks: Nested X server}
+  \begin{itemize}
+  \item Xephyr with Chrome or FFox
+  \item Avoids anoying pop up windows, but you can still see/interact
+  \end{itemize}
+  \begin{verbatim}
+    Xephyr -ac -screen 1918x1058 :99 &
+    export DISPLAY=:99
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Tips and tricks: Drop to iPdb shell on error}
+  \begin{itemize}
+  \item Keeps browser open, and allows you to debug
+  \end{itemize}
+  \begin{verbatim}
+    py.test --capture=no
+            --pdb
+            --pdbcls=IPython.terminal.debugger:Pdb
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Tips and tricks: Snapshot DB and just re-run one test}
+  \begin{itemize}
+  \end{itemize}
+  \begin{verbatim}
+from utils.snapshot import take_snapshot, restore_snapshot
+def test_approve_comment():
+    # test code here
+    take_snapshot("rc")
+    
+def test_reply_comment():
+    restore_snapshot("rc")
+    # test code here
+
+
+$ py.test tests/test_comments.py::test_reply_comment
+    
+\end{verbatim}
+\end{frame}
+
+\end{document}

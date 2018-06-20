@@ -1,0 +1,111 @@
+\documentclass{beamer}
+\usepackage{listings}
+\usepackage{minted}
+\usepackage{anyfontsize}
+
+\mode<presentation> {
+  \usetheme{Madrid}
+}
+
+\title[Dirty COW]{Infosec: Dirty COW} % The short title appears at the bottom of every slide, the full title is only on the title page
+
+\author{Radu Ciorba \href{mailto:radu@devrandom.ro}{\{radu@devrandom.ro\}}} % Your name
+\date{June 29, 2017} % Date, can be changed to a custom date
+
+\begin{document}
+
+\begin{frame}
+  \titlepage % Print the title page as the first slide
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Dirty COW - CVE-2016-5195}
+  \begin{itemize}
+  \item Affected Linux since 2.6.22 (2016) till 18 Oct 2016 
+  \item allows one to write to files owned by root
+  \item that in turn allows users to execute code as root
+  \item Discovered in the wild by Phil Oester
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{But first: Virtual Memory, Paging, mmap}
+  \begin{itemize}
+  \item Every program gets own address space (4GB on 32 bit)
+  \item Obviously that's more address space than RAM, memory mapping
+  \item Pages can be in a Frame(RAM), on disk, etc.
+  \item If something is read only (like glibc's code), it can be mapped in to multiple programs
+  \item mmap allows us to perform IO, using this system
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{mmap COW}
+  \begin{itemize}
+  \item mmap allows you to keep a private, writable in-memory coppy of a file
+  \item won't pre-allocate and load the file, but will Copy-On-Write pages as needed
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{madvise}
+  \begin{itemize}
+  \item madvise let's you give hints to the kernel about how you're gonna access memory
+  \item you can tell the kernel you don't need a page anymore
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The exploit}
+  \begin{itemize}
+  \item Race condition in the kernel, triggered when retrying a page acces for write during COW
+  \item One thread writes to the mmap-ed memory
+  \item Another thread madvise-s the kernel the page is not needed, this causes the kernel to discard the page
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The exploit}
+  \inputminted[fontsize=\footnotesize]{c}{snippets/exploit-madv.c}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The exploit}
+  \inputminted[fontsize=\footnotesize]{c}{snippets/exploit-self-mem.c}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Useful stuff}
+  \begin{itemize}
+  \item \href{https://www.youtube.com/watch?v=kEsshExn7aE}{Video explaining Dirty COW local root exploit}
+  \item \href{https://github.com/dirtycow/dirtycow.github.io/wiki/VulnerabilityDetails}{Exploit Page}
+  \item \href{https://github.com/torvalds/linux/commit/19be0eaffa3ac7d8eb6784ad9bdbc7d67ed8e619}{Commit to fix it}
+  \item \href{https://github.com/torvalds/linux/commit/4ceb5db9757aaeadcf8fbbf97d76bd42aa4df0d6}{Previous attempt at fixing it}
+  \item \href{https://chao-tic.github.io/blog/2017/05/24/dirty-cow}{An explanation of what happens in the kernel to trigger this bug}
+    
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Thanks}
+  That's all folks!
+  \newline
+  \newline
+  The slides are available at
+  \href{https://devrandom.ro/talks}{https://devrandom.ro/talks}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{It's your turn to present!}
+  \begin{itemize}
+  \item SMB vulnerability (WannaCry)
+  \item HeartBleed 
+  \item go to pwnie awards, pick a nomination from the last decade
+  \item or whatever tickles your fancy
+  \end{itemize}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,117 @@
+\documentclass{beamer}
+\usepackage{listings}
+\usepackage{anyfontsize}
+\usepackage[cache=false,outputdir=.texpadtmp]{minted}
+
+
+\mode<presentation> {
+  \usetheme{Madrid}
+}
+
+\title[Async Python]{What is this async def and why is it aswesome} % The short title appears at the bottom of every slide, the full title is only on the title page
+
+\author{Radu Ciorba \href{mailto:radu@devrandom.ro}{\{radu@devrandom.ro\}}} % Your name
+%% \institute[devrandom.ro] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
+%% {
+%%   %% Radu Ciorba \\ % Your institution for the title page
+%%   \medskip
+%%   \textit{radu.ciorba@bitdefender.com} % Your email address
+%% }
+\date{\today} % Date, can be changed to a custom date
+
+\begin{document}
+
+\begin{frame}
+  \titlepage % Print the title page as the first slide
+\end{frame}
+
+\begin{frame}
+  \frametitle{What is the problem we're trying to solve?}
+  \begin{itemize}
+  \item Concurrency?
+  \item Make Python WebScale?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{CPU Bound vs IO Bound}
+  \begin{itemize}
+  \item Mine Crypto-Currency - CPU heavy workload
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{CPU Bound vs IO Bound}
+  A common use case: a python web application
+  \begin{itemize}
+  \item 1 Listen for incomming connections
+  \item 2 Accept a connection
+  \item 3 Read the request data from the connection
+  \item \colorbox{yellow!30}{4 Parse the request}
+  \item \colorbox{yellow!30}{5 Call the request handler}
+  \item 6 Request handler queries the DB a few times
+  \item \colorbox{yellow!30}{7 Render a template using the data we got in step 6}
+  \item 8 Write the response out to the connection
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Different approaches to concurrency}
+  Threads (very similar for Processes)
+  \begin{itemize}
+  \item \colorbox{yellow!30}{1 Listen for incomming connections}
+  \item \colorbox{yellow!30}{2 Accept a connection}
+  \item \colorbox{yellow!30}{ * Start a new Thread, pass it the connection we just accepted}
+  \item 3 Read the request data from the connection
+  \item 4 Parse the request
+  \item 5 Call the request handler
+  \item 6 Request handler queries the DB a few times
+  \item 7 Render a template using the data we got in step 6
+  \item 8 Write the response out to the connection
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{An Async Example}
+  \inputminted[fontsize=\footnotesize]{javascript}{code/async.js}
+  %% \verbatimfont{\footnotesize}
+  %% \begin{verbatim}
+  %% $(document).on('submit', 'form.remember', function(){
+  %%    // code
+  %% });
+  %% \end{verbatim}
+\end{frame}
+
+
+\begin{frame}
+  Also known as: Callback Hell
+ \begin{center}
+ \includegraphics[scale=0.20,keepaspectratio=true]{./thisisfine.jpeg}
+ \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{A Python Tornado Async Example}
+  \inputminted[fontsize=\footnotesize]{python}{code/tornado1.py}
+  %% \verbatimfont{\footnotesize}
+  %% \begin{verbatim}
+  %% $(document).on('submit', 'form.remember', function(){
+  %%    // code
+  %% });
+  %% \end{verbatim}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Async in Python}
+  \begin{itemize}
+    \item 2002 - Twisted
+    \item 2006 - Eventlet
+    \item 2009 - Tornado
+    \item 2009 - Gevent
+    \item 2011 - PEP 3153 -- Asynchronous IO support
+    \item 2012 - Tulip \& PEP 3156 -- Asynchronous IO Support Rebooted
+    \item 2013 - Tulip becomes AsyncIO in 3.4
+  \end{itemize}
+\end{frame}
+
+\end{document}

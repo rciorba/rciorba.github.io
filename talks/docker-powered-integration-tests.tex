@@ -1,0 +1,118 @@
+\documentclass{beamer}
+\usepackage{listings}
+\usepackage{minted}
+
+\mode<presentation> {
+  \usetheme{Madrid}
+}
+
+\title[Docker powered integration tests]{Docker powered integration tests} % The short title appears at the bottom of every slide, the full title is only on the title page
+
+\author{Radu Ciorba \href{mailto:radu@devrandom.ro}{\{radu@devrandom.ro\}}} % Your name
+\date{\today} % Date, can be changed to a custom date
+
+\begin{document}
+
+\begin{frame}
+  \titlepage % Print the title page as the first slide
+\end{frame}
+
+\begin{frame}
+  \frametitle{Background}
+  \begin{itemize}
+  \item 2013 started playing arround with docker
+  \item 2014 docker for dev stuff \& deployed a ruby app at HackTM with docker + ansible
+  \item 2015 using docker in automated tests
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Context}
+  \begin{itemize}
+  \item Needed to manage an etcd cluster.
+  \item Let's write an ansible plugin to do that.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Development workflow}
+  \begin{itemize}
+  \item Prepare a vagrant environment with 3 machines
+  \item An ansible playbook that uses my plugin
+  \item Run playbook against vagrant VMs
+  \item Get feedback
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+ \begin{center}
+ \includegraphics[scale=0.22,keepaspectratio=true]{./images/excuses-for-not-writing-tests.jpg}
+ % excuses-for-not-writing-tests.jpg: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \end{center}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Problem: use cases quickly multiply}
+  \begin{itemize}
+  \item Create a new cluster of 3 machines: needs 1 node
+  \item Add a 3rd member to a cluster: needs 2 node cluster + another node 
+  \item Remove 1 member from 3 node cluster: need 3 node cluster
+  \item Remove unstarted member from 3 node cluster: need 2 node cluster
+  \item etc.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Development workflow, take 2}
+  \begin{itemize}
+  \item OK, maybe this thing does need propper tests (Accept I have a problem)
+  \item What if I could spin up a cluster in my desired state in a second?
+  \item use docker-py api to start multiple containers
+  \item write a pytest fixture that waits for the cluster to achieve consensus
+  \item write a test for each use case
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Create and start a container}
+  \inputminted[fontsize=\footnotesize]{python}{snippets/docker_tests.py}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Get the output}
+  \inputminted[fontsize=\footnotesize]{python}{snippets/docker_stream.py}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The fixture}
+  \inputminted[fontsize=\scriptsize]{python}{snippets/docker_fixture.py}
+\end{frame}
+  
+\begin{frame}
+  \frametitle{The fixture, continued}
+  \inputminted[fontsize=\scriptsize]{python}{snippets/docker_fixture_2.py}
+\end{frame}
+
+\begin{frame}
+  \frametitle{My takeways from this}
+  \begin{itemize}
+  \item ``that's to hard to test'' is always an excuse
+  \item A clear boundry between components makes things easy to test (cudos to ansible)
+  \item Not all external dependencies are prohibitive
+  \item Mocking / fakes are not a cure-all
+  \item Make your app log to stdout/stderr
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Thanks}
+  You can find the plugin at:
+  \href{https://github.com/Presslabs/etcd_membership_plugin}{https://github.com/Presslabs/etcd\_membership\_plugin}
+  \newline
+  \newline
+  The slides will be available at
+  \href{https://devrandom.ro/talks}{https://devrandom.ro/talks}
+\end{frame}
+
+\end{document}
