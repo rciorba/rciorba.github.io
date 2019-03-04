@@ -25,12 +25,23 @@
   \titlepage % Print the title page as the first slide
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{async def hello\_world()}
+  \inputminted[fontsize=\footnotesize]{python}{code/hw.py}
+\end{frame}
+
 \begin{frame}
   \frametitle{What is the problem we're trying to solve?}
   \begin{itemize}
-  \item Concurrency?
-  \item Make Python WebScale?
+  \item Do stuff concurrently
   \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{What is the problem we're trying to solve?}
+  \begin{center}
+  \includegraphics[scale=0.70,keepaspectratio=true]{./python-web-scale.jpeg}
+  \end{center}
 \end{frame}
 
 \begin{frame}
@@ -52,24 +63,57 @@
   \item 6 Request handler queries the DB a few times
   \item \colorbox{yellow!30}{7 Render a template using the data we got in step 6}
   \item 8 Write the response out to the connection
+  \item Rinse, repeat.
   \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Different approaches to concurrency}
-  Threads (very similar for Processes)
+  \frametitle{Different approaches}
   \begin{itemize}
-  \item \colorbox{yellow!30}{1 Listen for incomming connections}
-  \item \colorbox{yellow!30}{2 Accept a connection}
-  \item \colorbox{yellow!30}{ * Start a new Thread, pass it the connection we just accepted}
-  \item 3 Read the request data from the connection
-  \item 4 Parse the request
-  \item 5 Call the request handler
-  \item 6 Request handler queries the DB a few times
-  \item 7 Render a template using the data we got in step 6
-  \item 8 Write the response out to the connection
+  \item Threads
+  \item Processes
+  \item non blocking IO + event loop
   \end{itemize}
 \end{frame}
+
+\begin{frame}
+  \frametitle{Threads}
+  Threads add overhead:
+  \begin{itemize}
+  \item Each thread has it's own stack
+  \item Context switching
+  \item Shared state - easy to introduce bugs
+  \item The GIL - not a very big deal for IO bound problems
+  \item Still - good enough in many cases
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Event loop}
+  \begin{itemize}
+  \item Single thread of execution
+  \item Hand your code over to the EL to run it
+  \item Don't do your own IO, ask the EL to do it for you
+  \item Basically a form of cooperative concurrency
+  \item No really, don't do your own IO, cause you'll block the EL
+  \end{itemize}
+\end{frame}
+
+%% \begin{frame}
+%%   \frametitle{The same webapp example, with Threads}
+%%   Threads (very similar for Processes)
+%%   \begin{itemize}
+%%   \item \colorbox{yellow!30}{1 Listen for incomming connections}
+%%   \item \colorbox{yellow!30}{2 Accept a connection}
+%%   \item \colorbox{yellow!30}{ * Start a new Thread, pass it the connection we just accepted}
+%%   \item 3 Read the request data from the connection
+%%   \item 4 Parse the request
+%%   \item 5 Call the request handler
+%%   \item 6 Request handler queries the DB a few times
+%%   \item 7 Render a template using the data we got in step 6
+%%   \item 8 Write the response out to the connection
+%%   \end{itemize}
+%% \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{An Async Example}
@@ -104,13 +148,96 @@
 \begin{frame}
   \frametitle{Async in Python}
   \begin{itemize}
+    \item 1999 - asyncore lands in the stdlib for 1.5.2
     \item 2002 - Twisted
-    \item 2006 - Eventlet
     \item 2009 - Tornado
     \item 2009 - Gevent
     \item 2011 - PEP 3153 -- Asynchronous IO support
     \item 2012 - Tulip \& PEP 3156 -- Asynchronous IO Support Rebooted
     \item 2013 - Tulip becomes AsyncIO in 3.4
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{AsyncIO goals}
+  \begin{itemize}
+    \item Provide an API for event loops, allow interop between projects
+    \item Offer a solution to avoid callbacks (not required)
+    \item Work on python 3.4 as it was then, without changes to the language
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Async without callbacks: Coroutines}
+  \begin{itemize}
+    \item Provide an API for event loops, allow interop between projects
+    \item Coroutines: a solution to avoid callbacks (not required)
+    \item Work on python 3.4 as it was then, without changes to the language
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Coroutines without changin the language?}
+  \inputminted[fontsize=\footnotesize]{python}{code/coro.py}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{New language features: async def/await}
+  \inputminted[fontsize=\footnotesize]{python}{code/async1.py}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{New language features: async for}
+  \inputminted[fontsize=\footnotesize]{python}{code/async2.py}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{New language features: async with}
+  \inputminted[fontsize=\footnotesize]{python}{code/async3.py}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{New language features: yield in coroutines}
+  \inputminted[fontsize=\footnotesize]{python}{code/async4.py}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Library support}
+  \begin{itemize}
+    \item Sanic - Flask like web framework
+    \item Motor - mongo driver, originally for tornado
+    \item elasticsearcy-py-async - for ES
+    \item aio-pika - for rabbitmq
+    \item \href{https://github.com/aio-libs}{aio-libs project} - aiomysql, aiopg, aioredis, aiohttp
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Sanic + Motor}
+  \inputminted[fontsize=\footnotesize]{python}{code/sanic.py}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Where we are today}
+  \begin{itemize}
+    \item Elegant way to write async code in Python
+    \item A growing echosystem of asynio compattible libs
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Alternatives}
+  Gevent
+  \begin{itemize}
+    \item uses the greenlets package
+    \item write code in blissful ignorance of the Event Loop
+    \item gevent.monkey.patch\_all() - replaces blocking IO calls with cooperative versions
+    \item can't monkey patch C extensions - use pure python libs
+    \item many 3rd party libs will work (requests, django, any pure python code should work)
+    \item io in C extesions can still block the event loop
+    \item unlike async/await your code can be suspended/resumed at any time (like threads)
   \end{itemize}
 \end{frame}
 

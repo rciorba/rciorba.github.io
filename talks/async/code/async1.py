@@ -1,8 +1,6 @@
 async def hello(name):
-    return f"hello {name}" # P.S. how cool are format string!?
+    return f"hello {name}"
 
 async def main():
     print(await hello("pytim"))
     print(await hello("pybalkan"))
-
-print(main())

@@ -1,9 +1,9 @@
 $("#ok-btn").on('click', function() {
-  // disable the button, and render a spinner
+  // do some stuff here then post some data
   $.post('/foo', json, function(data) {
-      // close the dialog
+      // on success continue doing stuff here
   })
   .fail(function(response) {
-      // re-enable dialog, hide spinner
+      // on error, do some cleanup here
   })
 );
