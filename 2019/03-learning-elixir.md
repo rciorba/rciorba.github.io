@@ -1,14 +1,13 @@
-Some notes on my Elixir journey
-===============================
+Elixir first impressions
+========================
 
-Where am I coming from? I have some Erlang experience, and as I'm diving in to Elixir I
+As I'll be exploring Elixir, I'm going to write down my thoughts and impressions, mostly
+because it's a good way to cement what I'm learning.
+
+Where am I coming from? I have some Erlang knowledge and, as I'm diving in to Elixir, I
 find myself looking for the similarities (there are obviously many) and the differences.
-Also, for a full disclaimer I have to warn you that all of my assumptions are probably
+Also, for a full disclaimer, I have to warn you that all of my assumptions are probably
 shaped (sometimes maybe without me realizing it) by over 10 years of Python.
-
-The first thing that stands out for me is Elixir's large amount of syntactic sugar. Some
-of it looks nine, but sometimes I fear it's too much (I assume this is just my first
-reaction, I'll probably get used to it).
 
 # Notable differences and new concepts
 
@@ -28,8 +27,8 @@ have been a perfect fit for my problem.
 
 ### Strings
 Erlang was notorious for it's poor handling of strings. Thankfully Erlang has gotten
-better at this, and now using binaries as strings seems to be the preffered
-approach. Elixir embraces the binary string and makes the syntax less cumbersome.
+better at this, and now using binaries as strings is the preffered approach. Elixir
+embraces the binary string and makes the syntax less cumbersome.
 
 Binary strings no longer need 3 characters to open, and another 3 to close.
 ```
@@ -50,9 +49,9 @@ iex(4)> [65]
 'A'
 ```
 
-The only problem I can see is that having both type of strings must be confusing for people who come
-to Elixir, without knowing the history of Erlang, especially since it's only a single or double
-quote that differetiates them visually.
+The only problem I can see is that having both type of strings must be confusing for
+people who come to Elixir without knowing the history of Erlang, especially since it's
+only a single vs double quote that differetiates them visually.
 
 ### Enumerables
 Implement this interface... mea culpa, we're supposed call it a protocol...
@@ -136,9 +135,15 @@ https://www.erlang-solutions.com/blog/building-an-elixir-stream.html
 
 Maybe it's because of my Python background, but sometimes I found myself yearning for
 something like inheritance to reduce boilerplate in my Erlang code. So I'm very happy to
-see Elixir's use. 
+see Elixir's `use`.
 
-Now while it might look like inheritance at first glance, it's actually macro expansion.
+Now while it might look like inheritance at first glance, it's actually macro expansion. I
+can't say much more about this because I haven't really used it yet
+
+### Modules in the shell
+
+This might not be a huge deal, but for me it's great I can use the shell to quickly test
+out an ideea.
 
 ## Those I'm not sure about
 
@@ -182,14 +187,15 @@ This attempts to match a and leaves b to be (re)bound.
 {^a, b} = {1, 2}
 ```
 
-Also, just like Erlang, anything on the righ hand side will never be bound, only matched. So the
-following will never bind a or b, instead it will attempt a match:
+Also, just like Erlang, anything on the righ hand side will never be bound, only
+matched. So the following will never bind a or b, instead it will attempt a match:
 
 ```
 {1, 2} = {a, b}
 ```
 
-The big improvement here is we've lost
+The downside for Erlang's match-unless-bound is you need to know which variables are
+already bound. Elixir's pin operator is more explicit.
 
 ### Lower case variables, atoms and aliases
 
@@ -224,5 +230,18 @@ now potentially shadow functions. So when you write `is_number(1)` are you calli
 variable name when calling anonymous functions. So if you have a local varibale named
 is_number bound to a fun and want to call it, you'd use `is_number.(1)`.
 
-## Syntactic sugar overdose
+# Some early conclusions
+At the end of the day, it's basically still Erlang and, I think it's safe to say, most
+people who like Erlang like it despite the syntax.
+
+The biggest change for me would be the larger surface area. Erlang is actually a small
+language. Elixir adds lots of creature comforts, but that means more stuff to learn.
+
+Conditionals? In addition to Erlang's `cond` and `if` we also have `unless`.
+
+Aliases. A whole new concept.
+
+Nested modules? I need to learn more about these, but they seem to be just plain old
+modules, with a dot in the name :).
+
 
