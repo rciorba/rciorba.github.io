@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block css %}
+{{ super() }}
+.post-wrapper{
+    padding: 15px;
+    max-width: 900px;
+}
+.toc {
+    display: none;
+}
+.toc a {
+     color: #eeeeee;
+}
+.navbar {
+     font-size: 1.3em;
+}
+@media (min-width: 1100px){
+    .flex-container {
+        display: flex;
+        align-items: stretch;
+    }
+    .toc {
+        position: fixed;
+        top: 0;
+        right: 0;
+        max-width: 400px;
+        display: block;
+    }
+    .toc-flex{
+        flex-grow: 0;
+        flex-shrink: 0;
+        width: 420px;
+    }
+    .post-wrapper{
+        flex-grow: 1;
+    }
+}
+.codehilite {
+    padding-top: 4px;
+    padding-right: 10px;
+    padding-bottom: 4px;
+    padding-left: 10px;
+}
+p>code {
+    background: #2f1e2e;
+    padding: 4px;
+}
+{% endblock %}
+{% block extrahead %}
+  <link rel="stylesheet" href="./code.css">
+{% endblock %}
+
+{% block body %}
+  <div class="navbar">
+    <a href="/">Blog</a>
+    <a href="/">Presentations</a>
+    <a href="/">About</a>
+  </div>
+  <div class="toc">
+    {% autoescape false %}
+      {{toc}}
+    {% endautoescape %}
+  </div>
+  <div class="flex-container">
+    <div class="post-wrapper">
+      {% autoescape false %}
+        {{post}}
+      {% endautoescape %}
+
+      {#
+      <div class="tags">
+        Posted under:
+        {% for tag in tags %}
+          <a href="/tags/{{tag}}">{{tag}}</a>
+        {% endfor %}
+      </div>
+      #}
+
+    </div>
+    <div class="toc-flex"></div>
+  </div>
+{% endblock %}

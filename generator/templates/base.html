@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+  <head>
+    <title>{% block title %}/dev/random{% endblock %}</title>
+    <style>
+      {% block css %}
+      html {
+          background-color: #333;
+          background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkAgMAAAANjH3HAAAACVBMVEUaGhohISElJSUh9lebAAAB20lEQVRIx4XWuZXDMAwE0C0SAQtggIIYoAAEU+aKOHhYojTrYP2+QfOW/5QIJOih/q8HwF/pb3EX+UPIveYcQGgEHiu9hI+ihEc5Jz5KBIlRRRaJ1JtoSAl5Hw96hLB1/up1tnIXOck5jZQy+3iU2hAOKSH1JvwxHsp+5TLF5MOl1/MQXsVs1miXc+KDbYydyMeUgpPQreZ7fWidbNhkXNJSeAhc6qHmHD8AYovunYyEACWEbyIhNeB9fRrH3hFi0bGPLuEW7xCNaohw1vAlS805nfsrTspclB/hVdoqusg53eH7FWot+wjYpOViX8KbFFKTwlnzvj65P9H/vD0/hibYBGhPwlPO8TmxRsaxsNnrUmUXpNhirlJMPr6Hqq9k5Xn/8iYQHYIuQsWFC6Z87IOxLxHphSY4SpuiU87xJnJr5axfeRd+lnMExXpEWPpuZ1v7qZdNBOjiHzDREHX5fs5Zz9p6X0vVKbKKchlSl5rv+3p//FJ/PYvoKryI8vs+2G9lzRmnEKkh+BU8yDk515jDj/HAswu7CCz6U/Mxb/PnC9N41ndpU4hUU7JGk/C9PmP/M2xZYdvBW2PObyf1IUiIzoHmHW9yTncliYs9A9tVNppdShfgQaTLMf+j3X723tLeHgAAAABJRU5ErkJggg==);
+          background-attachment: fixed;
+          color: #eeeeee;
+          font-size: 1.2em;
+          font-family: serif;
+          margin: 0px;
+          padding: 0px;
+          border: 0px;
+      }
+      html, body{
+          height: 100%;
+          margin: 0px;
+          padding: 0px;
+          border: 0px;
+      }
+      h1, h2, h3, h4, h5 {
+          font-weight: lighter;
+          font-style: italic;
+          color: #9baaff;
+      }
+      a {
+          color: #9c96e0;;
+          text-decoration: none;
+      }
+      a:hover {
+          color: #fff;
+          text-decoration: underline;
+      }
+      #wrapper{
+          min-height: 100%;
+          height: auto !important;
+          height: 100%;
+          padding: 0px;
+          margin: 0 0 -120px 0; /* the bottom margin is the negative value of the footer's height */
+      }
+      #footer, .push {
+          margin: 0px;
+          text-align: center;
+          height: 120px;
+          text-align: center;
+          clear:both;
+          font-family: monospace;
+      }
+      #rand-container, #random {
+          width:auto;
+          text-align: center;
+          margin: 0px;
+      }
+     .attribution {
+         font-size: 0.7em;
+         color: #ccc;
+     }
+     {% endblock %}
+
+    </style>
+    {% block extrahead %}
+    {% endblock %}
+  </head>
+  <body>
+    {% block body %}  
+      <div id="wrapper">
+        {% block content %}
+          <div id="rand-container">
+            <pre id='random'></pre>
+          </div>
+        {% endblock %}
+        <div class="push"></div>
+      </div>
+      <div id="footer">
+        {% block footer %}
+          This is Radu Ciorba's corner of the internet.<br /><br />
+          Checkout out my code on <a href="https://github.com/rciorba/">Github</a> or
+          <a href="https://bitbucket.com/raduciorba/">Bitbucket</a>.<br />
+          Or checkout slides from some of my <a href="talks/">talks</a>.
+          <p class="attribution">
+            Backgroud pattern shamelessly copied from
+            <a href="https://github.com/StylishThemes/GitHub-Dark">Github Dark User Style (CC-A-SA).
+          </p>
+        </div>
+        <script>
+            "use strict";
+            var element = document.getElementById("random");
+            var characters = "0123456789abcdef";
+            element.innerHTML = "";
+            for (var count = 0; count < 32; count++) {
+                var index = Math.floor(15.9999 * Math.random());
+                element.innerHTML = element.innerHTML + characters[index];
+            }
+        </script>
+        {% endblock %}
+    {% endblock %}
+  </body>
+</html>

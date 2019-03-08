@@ -1,3 +1,7 @@
+---
+tags: elixir, erlang
+---
+
 Elixir first impressions
 ========================
 
@@ -26,12 +30,12 @@ ended up writing some check code myself and, reading about structs, I think they
 have been a perfect fit for my problem.
 
 ### Strings
-Erlang was notorious for it's poor handling of strings. Thankfully Erlang has gotten
-better at this, and now using binaries as strings is the preffered approach. Elixir
+Ages ago Erlang was notorious for it's poor handling of strings. Thankfully Erlang has
+gotten better at this, and now using binaries as strings is the preffered approach. Elixir
 embraces the binary string and makes the syntax less cumbersome.
 
 Binary strings no longer need 3 characters to open, and another 3 to close.
-```
+```iex
 iex(1)> "a"
 "a"
 iex(2)> <<"a">>
@@ -42,14 +46,14 @@ Because compatibillity with Erlang is important, the classic Erlang string (whic
 list of integers) is also available. In Elixir it's called a charlist.
 
 Charlists, classic Erlang strings:
-```
+```iex
 iex(3)> 'A'
 'A'
 iex(4)> [65]
 'A'
 ```
 
-The only problem I can see is that having both type of strings must be confusing for
+The only problem I can see is that having both type of strings could be confusing for
 people who come to Elixir without knowing the history of Erlang, especially since it's
 only a single vs double quote that differetiates them visually.
 
@@ -80,21 +84,33 @@ Let's write a small data transformation pipeline. We want to take a sequence of 
 double each number, then sum them.
 
 The following:
-```
-Enum.map(1..3, &(&1 * 2)) |> Enum.sum()
+
+```iex
+Enum.map(0..2, &(&1 * 2)) |> Enum.sum()
 ```
 
 is just syntactic sugar for:
-```
+```iex
 Enum.sum(
-    Enum.map(1..3, &(&1 * 2))
+    Enum.map(0..2, &(&1 * 2))
 )
 ```
 
 Let's have a closer look at `Enum.map`. It builds and returns a new list.
+
+```iex
+iex(4)> Enum.map(0..2, &(&1 * 2))
+[0, 2, 4]
 ```
-iex(4)> Enum.map(1..3, &(&1 * 2))
-[2, 4, 6]
+
+Let's go back to our pipeline, and add `IO.inspect()` in the middle. It will echo anything
+passed to it, then return it, which is perfect for sneaking a peek at what's passing
+trough.
+
+```iex
+iex(12)> Enum.map(0..2, &(&1 * 2)) |> IO.inspect() |> Enum.sum()
+[0, 2, 4]
+6
 ```
 
 Looking at the full example, notice how `Enum.sum` is only called at the very end, once
@@ -105,30 +121,39 @@ keyword was one of the things that made me love Python when I first learned it).
 
 This is where Elixir's Streams come in.
 
-We're not in kansas anymore:
-```
-iex(17)> Stream.map(1..3, &(&1 * 2))
-#Stream<[enum: 1..3, funs: [#Function<49.131689479/1 in Stream.map/2>]]>
+We're not in Kansas anymore:
+
+```iex
+iex(17)> Stream.map(0..2, &(&1 * 2))
+#Stream<[enum: 0..2, funs: [#Function<49.131689479/1 in Stream.map/2>]]>
 ```
 
 The Stream module provides tools to implement lazy composable data pipelines.
-Let's change the doubling and summing pipeline to use Streams:
-```
-# let's define a function that echos any value passed to it, then returns it
-iex(41)> echo = fn(el) -> IO.write("echo:"); IO.puts(el); el; end
-#Function<6.128620087/1 in :erl_eval.expr/5>
+Let's change the our example to use Streams:
 
-# now let's re-write our pipeline, and let's toss in our echo function
-# in the middle to sneak a peek at values as they pass trough
-
-iex(42)> Stream.map(1..3, &(&1*2)) |> Stream.map(echo) |> Enum.sum()
-echo:2
-echo:4
-echo:6
-12
+```iex
+iex(14)> Stream.map(0..2, &(&1*2)) |> IO.inspect() |> Enum.sum()
+#Stream<[enum: 0..2, funs: [#Function<49.131689479/1 in Stream.map/2>]]>
+6
 ```
 
-Erlang Solutions have a really good article about using Streams for effiency gains:
+As you can see it produced the same result but we didn't see the intermediate list,
+instead we got a stream. It would be nice if we could inspect not the stream itself, but
+each item produced. For that we'll use Stream.map to apply IO.inspect to each element.
+
+```iex
+iex(18)> Stream.map(0..2, &(&1*2)) |> Stream.map(&IO.inspect/1) |> Enum.sum()
+0
+2
+4
+6
+```
+
+And voila. I know it's a very simple example but hopefuly it gave you a feel for how you
+can use Streams to process data.
+
+Erlang Solutions have a really good article about using Streams for effiency gains, I
+recomend you check it out:
 https://www.erlang-solutions.com/blog/building-an-elixir-stream.html
 
 ### Use
@@ -140,10 +165,10 @@ see Elixir's `use`.
 Now while it might look like inheritance at first glance, it's actually macro expansion. I
 can't say much more about this because I haven't really used it yet
 
-### Modules in the shell
+### Define modules in the shell
 
 This might not be a huge deal, but for me it's great I can use the shell to quickly test
-out an ideea.
+out anything I'm uncertain about.
 
 ## Those I'm not sure about
 
@@ -153,7 +178,7 @@ In Elixir, unlike in Erlang, you can rebind variables. Unless you've programmed 
 before the next snippet of code will probably feel very natural for you. For me it's
 uncanny valley.
 
-```
+```iex
 iex(5)> {a, b} = {1, 2}
 {1, 2}
 
@@ -170,28 +195,30 @@ iex(8)> a
 Pattern matching is much like in Erlang. For example, this can't match because a would be
 bound to two distinct values:
 
-```
-{a, a} = {1, 2}
+```iex
+iex(1)> {a, a} = {1, 2}
 ** (MatchError) no match of right hand side value: {1, 2}
 ```
 
 This is OK.
-```
-{a, a} = {2, 2}
+
+```iex
+iex(1)> {a, a} = {2, 2}
 ```
 
 To avoid rebinding a variable you must use the pin operator `^`.
 
 This attempts to match a and leaves b to be (re)bound.
-```
-{^a, b} = {1, 2}
+
+```iex
+iex(1)> {^a, b} = {1, 2}
 ```
 
 Also, just like Erlang, anything on the righ hand side will never be bound, only
 matched. So the following will never bind a or b, instead it will attempt a match:
 
-```
-{1, 2} = {a, b}
+```iex
+iex(1)> {1, 2} = {a, b}
 ```
 
 The downside for Erlang's match-unless-bound is you need to know which variables are
@@ -206,7 +233,8 @@ capitalization doesn't matter in Elixir... nope, capitaization still matters in 
 you type a capitalized word, because of another feature called Aliasing, you get an atom.
 
 Elixir atoms:
-```
+
+```iex
 iex(1)> is_atom(:abc)
 true
 
@@ -231,17 +259,26 @@ variable name when calling anonymous functions. So if you have a local varibale 
 is_number bound to a fun and want to call it, you'd use `is_number.(1)`.
 
 # Some early conclusions
-At the end of the day, it's basically still Erlang and, I think it's safe to say, most
-people who like Erlang like it despite the syntax.
+At the end of the day, it's basically mostly just Erlang but with a different syntax and,
+I think it's safe to say, most people who like Erlang like it despite the syntax.
 
-The biggest change for me would be the larger surface area. Erlang is actually a small
-language. Elixir adds lots of creature comforts, but that means more stuff to learn.
+The biggest upside is the large and growing community plus the ecosystem of open source
+packages. If you've ever searched for an Erlang package to solve some problem and
+encountered 2 or 3 repos, neither having any activity in the last 3 years, you'll really
+apreciate this.
 
-Conditionals? In addition to Erlang's `cond` and `if` we also have `unless`.
+Now on to something that irks me. Maybe because I've had Python's *"There should be one--
+and preferably only one --obvious way to do it."* drilled in to my head for a decade I
+find myself squirming a bit when I see all these:
 
-Aliases. A whole new concept.
+ * Conditionals? In addition to Erlang's `cond` and `if` we also have `unless`. No biggie.
 
-Nested modules? I need to learn more about these, but they seem to be just plain old
-modules, with a dot in the name :).
+ * Should I `require` this module? `import` it? `use` it? There is good documentation
+about the diferences, but I can't shake the feeling there are too many options.
 
+ * Aliases. Not a complicated concept, but there seem to be many different ways to create
+   an alias.
 
+## What I need to learn about
+
+ * Macros
