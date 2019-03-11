@@ -1,24 +1,15 @@
 {% extends "base.html" %}
 {% block css %}
 {{ super() }}
-.post-wrapper{
-    padding: 15px;
-    max-width: 900px;
-}
 .toc {
     display: none;
 }
 .toc a {
      color: #eeeeee;
 }
-.navbar {
-     font-size: 1.3em;
-}
+
+
 @media (min-width: 1100px){
-    .flex-container {
-        display: flex;
-        align-items: stretch;
-    }
     .toc {
         position: fixed;
         top: 0;
@@ -29,16 +20,13 @@
     .toc-flex{
         flex-grow: 0;
         flex-shrink: 0;
-        width: 420px;
-    }
-    .post-wrapper{
-        flex-grow: 1;
+        width: 400px;
     }
 }
 .codehilite {
-    padding-top: 4px;
+    padding-top: 1px;
     padding-right: 10px;
-    padding-bottom: 4px;
+    padding-bottom: 1px;
     padding-left: 10px;
 }
 p>code {
@@ -47,36 +35,34 @@ p>code {
 }
 {% endblock %}
 {% block extrahead %}
-  <link rel="stylesheet" href="./code.css">
+  <link rel="stylesheet" href="/styles/code-dark.css">
 {% endblock %}
 
-{% block body %}
-  <div class="navbar">
-    <a href="/">Blog</a>
-    <a href="/">Presentations</a>
-    <a href="/">About</a>
-  </div>
+{% block before_container %}
   <div class="toc">
     {% autoescape false %}
       {{toc}}
     {% endautoescape %}
   </div>
-  <div class="flex-container">
-    <div class="post-wrapper">
-      {% autoescape false %}
-        {{post}}
-      {% endautoescape %}
+{% endblock %}
 
-      {#
-      <div class="tags">
-        Posted under:
-        {% for tag in tags %}
-          <a href="/tags/{{tag}}">{{tag}}</a>
-        {% endfor %}
-      </div>
-      #}
 
-    </div>
-    <div class="toc-flex"></div>
+{% block main_content %}
+  {% autoescape false %}
+    {{post}}
+  {% endautoescape %}
+  {#
+  <div class="tags">
+    Posted under:
+    {% for tag in tags %}
+      <a href="/tags/{{tag}}">{{tag}}</a>
+    {% endfor %}
   </div>
+  #}
+{% endblock %}
+
+{% block after_content %}
+  {% if toc %}
+    <div class="toc-flex"></div>
+  {% endif %}
 {% endblock %}

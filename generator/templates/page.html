@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+  <div class="blog-list">
+    {% for (item, page_meta) in page %}
+    <p>
+      <h3><a href="/{{ page_meta['path'] }}">{{ page_meta['title'] }} - {{page_meta['published']}}</a></h3>
+      {{ page_meta['tagline'] }}
+    </p>
+    {% endfor %}
+  </div>
+{% endblock %}
