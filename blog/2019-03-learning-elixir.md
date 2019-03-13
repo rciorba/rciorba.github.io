@@ -20,7 +20,7 @@ Also, for a full disclaimer, I have to warn you that all of my assumptions are s
 
 # Notable differences and new concepts
 
-## The ones I really like
+## The good stuff
 
 ### Structs
 
@@ -204,7 +204,7 @@ iex(4)> Foo.bar()
 foobar
 :ok
 ```
-## Those I'm not sure about
+## The meh ones
 
 ### Rebinding variables
 
@@ -303,7 +303,8 @@ is_number bound to a fun and want to call it, you'd use `is_number.(1)`.
 
 # Some early conclusions
 Elixir is a bigger language, there are simply more concepts to learn, in addition to all
-the concepts in Erlang.
+the concepts in Erlang. Also, there's a lot od syntactic sugar, and while in time I might
+grow to like it, currently it just feels like too much.
 
 The biggest upside is the large and growing community plus the ecosystem of open source
 packages. If you've ever searched for an Erlang package to solve some problem and
